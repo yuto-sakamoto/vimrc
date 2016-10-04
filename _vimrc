@@ -311,19 +311,21 @@ if exists("b:did_ftplugin")
 
 
 "vim‚Ì”wŒi‚ð“§‰ß
-"if !has('gui_running')
-"    augroup seiya
-"        autocmd!
-"        autocmd VimEnter,ColorScheme * highlight Normal ctermbg=none
-"        autocmd VimEnter,ColorScheme * highlight LineNr ctermbg=none
-"        autocmd VimEnter,ColorScheme * highlight SignColumn ctermbg=none
-"        autocmd VimEnter,ColorScheme * highlight VertSplit ctermbg=none
-"        autocmd VimEnter,ColorScheme * highlight NonText ctermbg=none
-"    augroup END
-"endif
-"
-"let g:seiya_auto_enable=1
+if !has('gui_running')
+    augroup seiya
+        autocmd!
+        autocmd VimEnter,ColorScheme * highlight Normal ctermbg=none
+        autocmd VimEnter,ColorScheme * highlight LineNr ctermbg=none
+        autocmd VimEnter,ColorScheme * highlight SignColumn ctermbg=none
+        autocmd VimEnter,ColorScheme * highlight VertSplit ctermbg=none
+        autocmd VimEnter,ColorScheme * highlight NonText ctermbg=none
+    augroup END
+endif
+
+let g:seiya_auto_enable=1
 
 
 "colorscheme
-colorscheme hybrid
+
+colorscheme default
+
