@@ -1,0 +1,53 @@
+<!DOCUTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>キャラ診断</title>
+    <style>
+      body { text-align: center; }
+    </style>
+  </head>
+  <body>
+    <h1>キャラ診断</h1>
+    <input type="text" id="name" value="">
+    <p><input type="button" id="getResult" value="診断!"></p>
+    <h2>診断結果</h2>
+    <p id="result">こちらに結果が表示されます。</p>
+    <div id="twitte"></div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>
+      $(function() {
+          $('#getResult').click(function() {
+              // 入力名を取得
+              var name = $('#name').val();
+
+              if (name != '') {
+              // キャラ診断定義
+              var types = ["勇者","魔法使い","戦士","遊び人","スーパースター"];
+
+              // 診断結果取得
+              var type = types[Math.floor(Math.random() * types.length)];
+
+              // 形容詞定義
+              var characters = ["カッコイイ","可愛い","気持ち悪い","臭い","年取った"];
+
+              // 形容詞取得
+              var character = characters[Math.floor(Math.random() * characters.length)];
+              // 診断結果表示
+              var result = name + "さんは" + character + type + "です";
+              $("#result").text(result);
+
+              // ツイートリンクの生成。
+              var twitteLink = '<a href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(result) + '&hashtags=dotinstall" target="_blank">ツイートする</a>';
+              $('#twitte').html(twitteLink);
+
+              } else {
+              alert("名前を入力してください");
+              return;
+              }
+          });
+      });
+    </script>
+  </body>
+</html>
+
