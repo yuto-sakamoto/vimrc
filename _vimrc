@@ -261,8 +261,8 @@ set noswapfile
 set showtabline=2
 
 "バックアップファイルを作成しない( ~ ←チルダマークのファイル )
-"set nobackup
-"set nowritebackup
+set nobackup
+set nowritebackup
 set noundofile
 
 " スペースをインデントと判断する
@@ -295,6 +295,11 @@ set listchars=tab:>-,extends:<,trail:- "eol:<
 " 「%」キーで対応するHTMLタグやrubyのdef endにジャンプできる。
 source $VIMRUNTIME/macros/matchit.vim
 
+" ウインドウの幅（現在はgvimrcで設定している）
+"set columns=100
+" ウインドウの高さ
+"set lines=50
+
 
 "==========================
 " キーマッピング設定
@@ -302,8 +307,8 @@ source $VIMRUNTIME/macros/matchit.vim
 "==========================
 "ノーマルモード＋ビジュアルモード(noremap：map)
 "コマンドラインモード＋インサートモード(noremap!：ap!)
-"ノーマルモード(nnoremap：map)
-"ビジュアル(選択)モード(vnoremap：map)
+"ノーマルモード(noremap：nmap)
+"ビジュアル(選択)モード(vnoremap：vmap)
 "コマンドラインモード(cnoremap：cmap)
 "インサート(挿入)モード(inoremap：imap)
 " =========================
@@ -315,7 +320,26 @@ inoremap (<Enter> ()<Left><CR><ESC><S-o>
 " Escキー2回で検索語句のハイライトをoff
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
+" ESCキーでノーマルモード→controll+jキーでノーマルモード
 imap <C-j> <ESC>
+
+" 先頭行にカーソルを移動
+noremap <S-h> ^
+
+" 行末にカーソルを移動
+noremap <S-l> $
+
+" ノーマルモード：シングルクォーテーション内の文字列をqでカット
+nmap q ci'
+
+" ノーマルモード：ダブルクォーテーション内の文字列をqqでカット
+nmap qq ci"
+
+" ノーマルモード：vimgrepで検索した際の前へ
+noremap [ :cprevious<CR>
+
+" ノーマルモード：vimgrepで検索した際の次へ
+noremap ] :cnext<CR>
 
 "=========================
 " 全角スペースハイライト化
