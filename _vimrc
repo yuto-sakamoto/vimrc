@@ -61,6 +61,29 @@ NeoBundle "rhysd/accelerated-jk"
 NeoBundle "tpope/vim-endwise"
 " インデントの階層を可視化
 NeoBundle "Yggdroot/indentLine"
+
+" コード補完=================
+NeoBundle 'Shougo/neocomplcache'
+or
+NeoBundle 'Shougo/neocomplete'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+"NeoBundle 'Shougo/neocomplete.vim'
+"NeoBundle 'marcus/rsense'
+"NeoBundle 'supermomonga/neocomplete-rsense.vim'
+"============================
+" ドキュメント参照(gemに追加後使用できる)
+" ruby メソッドなどのリファレンスを参照できる
+NeoBundle 'thinca/vim-ref'
+NeoBundle 'yuku-t/vim-ref-ri'
+
+" 静的解析(保存時に使われていない変数などのチェックをする)
+NeoBundle 'scrooloose/syntastic'
+
+" メソッド定義元へのジャンプ
+" 使いたいルートディレクトリで $ ctags -Rを実行しtagsファイルを生成する
+NeoBundle 'szw/vim-tags'
+
 nmap <Leader>c <Plug>(caw:i:toggle)
 vmap <Leader>c <Plug>(caw:i:toggle)
 NeoBundle 'sophacles/vim-processing'
@@ -195,42 +218,14 @@ fu! s:Highlight_Matching_Pair()
        let w:tag_hl_on = 1
      endfu
 
-"カーソルがずれるのを修正するが他のプラグインなどが使えない
-"diff -r a0198cebc8f4 src/screen.c
-"b/src/screen.c  Sun Mar 15 00:35:05 2015 +0900
-"@@ -4484,11 +4484,15 @@
-"         */
-"        if (wp->w_p_lbr && vim_isbreak(c) && !vim_isbreak(*ptr))
-"        {
-"# ifdef FEAT_MBYTE
-"           int off = has_mbyte ? (*mb_head_off)(line, ptr - 1) : 0;
-"#endif
-"            char_u *p = ptr - (
-" # ifdef FEAT_MBYTE
-"           off +
-"# endif
-"           1);
-"
-"            /* TODO: is passing p for start of the line OK? */
-"            n_extra = win_lbr_chartabsize(wp, line, p, (colnr_T)vcol,
-"                                    NULL) - 1;
-"@@ -4496,7 +4500,11 @@
-"            n_extra = (int)wp->w_buffer->b_p_ts
-"                       - vcol % (int)wp->w_buffer->b_p_ts - 1;
-"
-"# ifdef FEAT_MBYTE
-"           c_extra = off ? MB_FILLER_CHAR : ' ';
-"# else
-"            c_extra = ' ';
-"# endif
-"            if (vim_iswhite(c))
-"            {
-" #ifdef FEAT_CONCEAL
 
 "===================================
 " 設定
 " デフォルトの機能拡張
 " ==================================
+"コマンド補完
+set wildmenu " コマンドモードの補完
+set history=5000 " 保存するコマンド履歴の数
 
 " カーソルラインを表示する
 set cursorline
@@ -300,7 +295,15 @@ source $VIMRUNTIME/macros/matchit.vim
 " ウインドウの高さ
 "set lines=50
 
+" ブランチ情報を表示する(Git)
+let g:airline#extensions#branch#enabled = 1
 
+" rsenseの設定(インストールがまだ)
+"let g:rsenseuseomnifunc = 1
+"
+" 品質チェック(設定しなくても使える!?)
+"let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['ruby'] }
+"let g:syntastic_ruby_checkers = ['rubocop']
 "==========================
 " キーマッピング設定
 " モード(再割り当てなし：再割り当てあり)
@@ -321,7 +324,9 @@ inoremap (<Enter> ()<Left><CR><ESC><S-o>
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
 " ESCキーでノーマルモード→controll+jキーでノーマルモード
-imap <C-j> <ESC>
+" imap <C-j> <ESC>
+"jjでインサートモードを抜ける
+inoremap <silent> jj <ESC>
 
 " 先頭行にカーソルを移動
 noremap <S-h> ^
@@ -371,7 +376,8 @@ let NERDTreeWinSize= 20
 if argc() == 0
   let g:nerdtree_tabs_open_on_console_startup = 1
 end
-
+" NERDTreeの画面を開閉する
+map <C-n> :NERDTreeToggle<CR>
 " =======================
 " tyru.caw.vim
 " ======================
@@ -393,3 +399,114 @@ end
 "let g:indentLine_concealcursor = 'inc'
 "let g:indentLine_conceallevel = 2
 
+"########################2018/02/11
+"Note: This option must be set in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.  自動補完機能を有効にする
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
+
+
+" Use neocomplete.vim
+let g:neocomplete#sources#omni#input_patterns = {
+\   "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+\}
+" Set async completion.
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
+" Orulet g:monster#completion#solargraph#backend = "async_solargraph_suggest"
+
+" osyo-manga/vim-monster 使用方法：いまいちわからん
+" With deoplete.nvim
+let g:deoplete#sources#omni#input_patterns = {
+\   "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+\}
+
+
+
+
+
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
