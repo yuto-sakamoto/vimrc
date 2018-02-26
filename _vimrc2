@@ -18,6 +18,12 @@ if 0 | endif
 
 " developブランチ
 " mergeブランチ
+
+
+
+
+
+" merge2ブランチにマージ
 if has('vim_starting')
   if &compatible
     set nocompatible               " Be iMproved
