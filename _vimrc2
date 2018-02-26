@@ -17,6 +17,8 @@ au BufWrite /private/etc/pw.* set nowritebackup nobackup
 if 0 | endif
 
 " developブランチ
+
+" no-mergeブランチ
 if has('vim_starting')
   if &compatible
     set nocompatible               " Be iMproved
