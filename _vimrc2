@@ -16,6 +16,7 @@ au BufWrite /private/etc/pw.* set nowritebackup nobackup
 " Note: Skip initialization for vim-tiny or vim-small.
 if 0 | endif
 
+" developブランチ
 if has('vim_starting')
   if &compatible
     set nocompatible               " Be iMproved
