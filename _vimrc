@@ -1,100 +1,118 @@
+" Configuration file for vim
+set modelines=0		" CVE-2007-2438
 
-set clipboard=unnamed,autoselect
-set rop=type:directx
-set fileencodings=iso-2022-jp,cp932,sjis,euc-jp,utf-8
+" Normally we use vim-extensions. If you want true vi-compatibility
+" remove change the following statements
+set nocompatible	" Use Vim defaults instead of 100% vi compatibility
+set backspace=2		" more powerful backspacing
 
-"s––As“ª‚ÉƒWƒƒƒ“ƒv‚·‚é(Alt+r)(Alt+a)
-inoremap <A-r> <Esc>$a
-inoremap <A-a> <Esc>^a
-noremap <A-r> <Esc>$a
-noremap <A-a> <Esc>^a
+" Don't write backup file if vim is being called by "crontab -e"
+au BufWrite /private/tmp/crontab.* set nowritebackup nobackup
+" Don't write backup file if vim is being called by "chpass"
+au BufWrite /private/etc/pw.* set nowritebackup nobackup
 
-"htmlƒ^ƒO•âŠ®( </ + C+x + C+o )
-augroup MyXML
-  autocmd!
-  autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
-  autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
-augroup END
+" neobundleãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
+"NeoBundle Scripts-----------------------------
+" Note: Skip initialization for vim-tiny or vim-small.
+if 0 | endif
 
-"©“®•Â‚¶Š‡ŒÊ
-inoremap {<Enter> {}<Left><CR><ESC><S-o>
-inoremap [<Enter> []<Left><CR><ESC><S-o>
-inoremap (<Enter> ()<Left><CR><ESC><S-o>
-
-
-
-
-
-
-
-
-
-"ƒ„ƒ“ƒN‚ÅƒNƒŠƒbƒvƒ{[ƒh‚ÉƒRƒs[‚Å‚«‚éB
-set clipboard=unnamed
-
-
-set guifont=Ricty_Diminished:h12:cSHIFTJIS
-
-
-
-set transparency=240
-set rop=type:directx
-
-"===============================================================
-"neobundle.vim‚Ì“±“ü? (ƒvƒ‰ƒOƒCƒ““±“üƒpƒbƒP[ƒW)
 if has('vim_starting')
-  set nocompatible
-  if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
-    echo "install neobundle..."
-    :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+  if &compatible
+    set nocompatible               " Be iMproved
   endif
+
+  " Required:
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
-call neobundle#begin(expand('~/.vim/bundle'))
-let g:neobundle_default_git_protocol='https'
 
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
 NeoBundleFetch 'Shougo/neobundle.vim'
-"‚±‚±‚©‚ç‰º‚ÉƒCƒ“ƒXƒg[ƒ‹‚µ‚½‚¢ƒvƒ‰ƒOƒCƒ“‚ğ‘‚­
-NeoBundle 'nanotech/jellybeans.vim'
-"vim‚©‚çshell‚ğg‚¦‚éƒvƒ‰ƒOƒCƒ“
-NeoBundleLazy 'Shougo/vimshell',{
-      \ 'depends' : 'Shougo/vimproc',
-      \ 'autoload' : {
-      \ 'commands' : [{ 'name' : 'VimShell', 'complete' : 'customlist,vimshell#complete'},
-      \ 'VimmShellExecute', 'VimShellInteractive',
-      \ 'VimShellTerminal', 'VimShellPop'],
-      \ 'mappings' : ['<Plug>(vimshell_switch)']
-      \ }}
-"•Â‚¶Š‡ŒÊ•âŠ®B‚Qd•Â‚¶Š‡ŒÊ‚à–h~
-NeoBundle 'Townk/vim-autoclose'
 
-NeoBundleLazy 'tpope/vim^endwise', {
-      \ 'autoload' : { 'insert' : 1, }}
-"–¢İ’è
-NeoBundle 'vimtaku/hl_matchit.vim'
+" My Bundles here:
+" Refer to |:NeoBundle-examples|.
+" Note: You don't set neobundle setting in .gvimrc!
+ 
+NeoBundle 'Shougo/vimproc.vim', {
+      \ 'build' : {
+      \     'windows' : 'tools\\update-dll-mingw',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make',
+      \     'linux' : 'make',
+      \     'unix' : 'gmake',
+      \    },
+      \ }
+NeoBundle 'Shougo/vimshell'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'davidhalter/jedi-vim'
+NeoBundle 'tell-k/vim-autopep8'
+NeoBundle 'tyru/caw.vim.git'
+NeoBundle "sophacles/vim-processing"
+" ãƒ•ã‚¡ã‚¤ãƒ«ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ãƒ¼ã‚’vimã«è¡¨ç¤º
+NeoBundle "scrooloose/nerdtree"
+" ãƒ•ã‚¡ã‚¤ãƒ«ã‚¿ãƒ–é–“ã§ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ãƒ¼ã‚’å…±æœ‰
+NeoBundle "jistr/vim-nerdtree-tabs"
+" ã‚«ãƒ¼ã‚½ãƒ«ç§»å‹•ã®é«˜é€ŸåŒ–(j,k,l,h)
+NeoBundle "rhysd/accelerated-jk"
+" rubyç­‰ã®endç­‰ã®è‡ªå‹•è£œå®Œ
+NeoBundle "tpope/vim-endwise"
+" ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã®éšå±¤ã‚’å¯è¦–åŒ–
+NeoBundle "Yggdroot/indentLine"
 
-"html5‚Ì©“®ƒCƒ“ƒfƒ“ƒgƒvƒ‰ƒOƒCƒ“
-NeoBundle 'othree/html5.vim'
-"‚±‚±‚ÌŠÔ‚É‘‚­
-NeoBundleCheck
+" ã‚³ãƒ¼ãƒ‰è£œå®Œ=================
+NeoBundle 'Shougo/neocomplcache'
+or
+NeoBundle 'Shougo/neocomplete'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+"NeoBundle 'Shougo/neocomplete.vim'
+"NeoBundle 'marcus/rsense'
+"NeoBundle 'supermomonga/neocomplete-rsense.vim'
+"============================
+" ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆå‚ç…§(gemã«è¿½åŠ å¾Œä½¿ç”¨ã§ãã‚‹)
+" ruby ãƒ¡ã‚½ãƒƒãƒ‰ãªã©ã®ãƒªãƒ•ã‚¡ãƒ¬ãƒ³ã‚¹ã‚’å‚ç…§ã§ãã‚‹
+NeoBundle 'thinca/vim-ref'
+NeoBundle 'yuku-t/vim-ref-ri'
+
+" é™çš„è§£æ(ä¿å­˜æ™‚ã«ä½¿ã‚ã‚Œã¦ã„ãªã„å¤‰æ•°ãªã©ã®ãƒã‚§ãƒƒã‚¯ã‚’ã™ã‚‹)
+NeoBundle 'scrooloose/syntastic'
+
+" ãƒ¡ã‚½ãƒƒãƒ‰å®šç¾©å…ƒã¸ã®ã‚¸ãƒ£ãƒ³ãƒ—
+" ä½¿ã„ãŸã„ãƒ«ãƒ¼ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ $ ctags -Rã‚’å®Ÿè¡Œã—tagsãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆã™ã‚‹
+NeoBundle 'szw/vim-tags'
+
+nmap <Leader>c <Plug>(caw:i:toggle)
+vmap <Leader>c <Plug>(caw:i:toggle)
+NeoBundle 'sophacles/vim-processing'
+NeoBundle 'thinca/vim-quickrun'
+let g:quickrun_config = {}
+let g:quickrun_config.processing =  {
+      \     'command': 'processing-java',
+      \     'exec': '%c --sketch=$PWD/ --output=/Library/Processing --run --force',
+      \   }
+NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'taichouchou2/html5.vim'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'lilydjwg/colorizer'
+NeoBundle 'tpope/vim-fugitive'
+:set statusline+=%{fugitive#statusline()} 
+" NeoBundle 'itchyny/lightline.vim'
+" NeoBundle 'taketwo/vim-ros'
+
 call neobundle#end()
+
+" Required:
 filetype plugin indent on
-"===========================================================
 
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck"End NeoBundle Scripts-------------------------
+"ã“ã“ã¾ã§
 
-
-
-
-
-set t_Co=256
-syntax on
-"colorscheme jellybeans
-"========================================================
-"vimShellƒvƒ‰ƒOƒCƒ“ƒZƒbƒg
-nmap <silent> vs :<C-u>VimShell<CR>
-nmap <silent> vp :<C-u>VimShellPop<CR>
-"============================================================
-"html5‚Ì©“®ƒCƒ“ƒfƒ“ƒg
+"html5è‡ªå‹•ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆ
 let g:html5_event_handler_attributes_complete = 0
 
 let g:html5_rdfa_attributes_complete = 0
@@ -103,229 +121,392 @@ let g:html5_microdata_attributes_complete = 0
 
 let g:html5_aria_attributes_complete = 0
 
-"–¢İ’è
-let g:h1_matchit_allow_ft = 'html\|vim\|ruby\|sh'
 
+"ã“ã“ã¾ã§
 
-
-
-set fileencodings=iso-2022-jp,cp932,sjis,euc-jp,utf-8
-
-"ƒoƒbƒNƒAƒbƒvƒtƒ@ƒCƒ‹‚ğì‚ç‚È‚¢
-set nobackup
-
-
-"ƒXƒƒbƒvƒtƒ@ƒCƒ‹‚ğì‚ç‚È‚¢
-set noswapfile
-
-
-"ƒoƒbƒtƒ@‚ª•ÒW’†‚Å‚à‚»‚Ì‘¼ƒtƒ@ƒCƒ‹‚ğŠJ‚¯‚é‚æ‚¤‚É
-set hidden
-
-"“ü—Í’†‚ÌƒRƒ}ƒ“ƒh‚ğƒXƒe[ƒ^ƒX‚É•\¦‚·‚é
-set showcmd
-
-
-"s”Ô†
-set number
-
-"s––‚Ì‚P•¶šæ‚Ü‚ÅƒJ[ƒ\ƒ‹‚ğˆÚ“®‚Å‚«‚é‚æ‚¤‚É
-set virtualedit=onemore
-
-"ƒCƒ“ƒfƒ“ƒg‚ğƒXƒ}[ƒg‚É
-set smartindent
-
-
-"ƒ^ƒu‚ğíœ‚µ‚½‚¢‚Æ‚«‚Éˆê‹C‚É‚µ‚Ä‚­‚ê‚éB
-set smarttab
-
-
-"Š‡ŒÊ“ü—Í‚Ì‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦
-set showmatch
-
-"ƒXƒe[ƒ^ƒXƒ‰ƒCƒ“‚ğí‚É•\¦
-set laststatus=2
-
-
-"commandoƒ‰ƒCƒ“‚Ì•âŠ®
-set wildmode=list:longest
-
-
-"Ü‚è•Ô‚µ‚É•\¦’PˆÊ‚Å‚ÌˆÚ“®‚Å‚«‚é‚æ‚¤‚É‚·‚é
-nnoremap j gj
-nnoremap k gk
-
-"Tab•¶š‚ğ”¼ŠpƒXƒy[ƒX‚É‚·‚é
-set expandtab
-
-
-"TabƒRƒ}ƒ“ƒh‚ÅƒCƒ“ƒfƒ“ƒg‚ğ“ü—Í‚µ‚½‚Æ‚«‚Ì•\¦•( ”¼ŠpƒXƒy[ƒX‚¢‚­‚Â•ª )
-set tabstop=4
-
-
-"©“®ƒCƒ“ƒfƒ“ƒg‚Ì•\¦•i”¼ŠpƒXƒy[ƒXj
-set shiftwidth=4
-
-
-
-"ŒŸõ•¶š—ñ‚ª¬•¶š‚Ìê‡‚Í‘å•¶š¬•¶š‹æ•Ê‚È‚­ŒŸõ
-set ignorecase
-
-
-"ŒŸõ•¶š‚É‘å•¶š‚ªŠÜ‚Ü‚ê‚Ä‚¢‚éê‡‹æ•Ê‚µ‚ÄŒŸõ‚·‚é
-set smartcase
-
-
-"ŒŸõ•¶š—ñ“ü—Í‚É‡Ÿ‘ÎÛ•¶š—ñ‚Éƒqƒbƒg‚³‚¹‚é
-set incsearch
-
-"ŒŸõ‚ÉÅŒã‚Ü‚Ås‚Á‚½‚çÅ‰‚É–ß‚é
-set wrapscan
-
-
-"ŒŸõŒê‚ğƒnƒCƒ‰ƒCƒg•\¦‚·‚é
-set hlsearch
-
-
-"ESC˜A‘Å‚ÅƒnƒCƒ‰ƒCƒg‰ğœ
-nmap <Esc><Esc> :nohlsearch<CR><Esc>
-
-
-"–îˆóƒL[‚Å•\¦’PˆÊ‚ÅsˆÚ“®‚·‚é
-nmap <UP> gk
-nmap <DOWN> gj
-vmap <UP> gk
-vmap <DOWN> gj
-
-
-"ƒJ[ƒ\ƒ‹‚ğ©“®“I‚ÉŠ‡ŒÊ‚Ì’†‚É“ü‚ê‚é
-imap {} {}<Left>
-imap [] []<Left>
-imap () ()<Left>
-imap "" ""<Left>
-imap '' ''<Left>
-imap <> <><Left>
-
-
-
-
-
-
-"htmlƒ^ƒO‚É‚à‘Î‰‚·‚éƒ^ƒO‚ğƒnƒCƒ‰ƒCƒg‚É‚·‚éB
+"htmlã‚¿ã‚°ã«ã‚‚å¯¾å¿œã™ã‚‹ã‚¿ã‚°ã‚’ãƒã‚¤ãƒ©ã‚¤ãƒˆã«ã™ã‚‹ã€‚
 if exists("b:did_ftplugin")
-	    finish
-		endif
+  finish
+endif
+augroup matchhtmlparen
+  autocmd! CursorMoved,CursorMovedI,WinEnter <buffer> call s:Highlight_Matching_Pair()
+augroup END
 
-		augroup matchhtmlparen
-		    autocmd! CursorMoved,CursorMovedI,WinEnter <buffer> call s:Highlight_Matching_Pair()
-			augroup END
-
-			fu! s:Highlight_Matching_Pair()
-			    " Remove any previous match.
-				    if exists('w:tag_hl_on') && w:tag_hl_on
-						        2match none
-								        let w:tag_hl_on = 0
-										    endif
+fu! s:Highlight_Matching_Pair()
+  " Remove any previous match.
+  if exists('w:tag_hl_on') && w:tag_hl_on
+    2match none
+    let w:tag_hl_on = 0
+  endif
 
    " Avoid that we remove the popup menu.
        " Return when there are no colors (looks like the cursor jumps).
-   	    if pumvisible() || (&t_Co < 8 && !has("gui_running"))
-   			        return
-   					    endif
+       if pumvisible() || (&t_Co < 8 && !has("gui_running"))
+         return
+       endif
 
-   						    "get html tag under cursor
-   							    let tagname = s:GetCurrentCursorTag()
-   								    if tagname == ""|return|endif
+       "get html tag under cursor
+       let tagname = s:GetCurrentCursorTag()
+       if tagname == ""|return|endif
 
-   										    if tagname[0] == '/'
-   												        let position = s:SearchForMatchingTag(tagname[1:], 0)
-   														    else
-   																        let position = s:SearchForMatchingTag(tagname, 1)
-   																		    endif
-   																			    call s:HighlightTagAtPosition(position)
-   																							endfu
+       if tagname[0] == '/'
+         let position = s:SearchForMatchingTag(tagname[1:], 0)
+       else
+         let position = s:SearchForMatchingTag(tagname, 1)
+       endif
+       call s:HighlightTagAtPosition(position)
+     endfu
 
-																							fu! s:GetCurrentCursorTag()
-    "returns the tag under the cursor, includes the '/' if on a closing tag.
+     fu! s:GetCurrentCursorTag()
+       "returns the tag under the cursor, includes the '/' if on a closing tag.
 
-										    let c_col  = col('.')
-																			    let matched = matchstr(getline('.'), '\(<[^<>]*\%'.c_col.'c.\{-}>\)\|\(\%'.c_col.'c<.\{-}>\)')
-																				    if matched =~ '/>$'
-																						        return ""
-																								    elseif matched == ""
-								        " The tag itself may be spread over multiple lines.
-																								        let matched = matchstr(getline('.'), '\(<[^<>]*\%'.c_col.'c.\{-}$\)\|\(\%'.c_col.'c<.\{-}$\)')
-																													        if matched == ""
-																																            return ""
-																																			        endif
-																																																				    endif
+       let c_col  = col('.')
+       let matched = matchstr(getline('.'), '\(<[^<>]*\%'.c_col.'c.\{-}>\)\|\(\%'.c_col.'c<.\{-}>\)')
+       if matched =~ '/>$'
+         return ""
+       elseif matched == ""
+         " The tag itself may be spread over multiple lines.
+         let matched = matchstr(getline('.'), '\(<[^<>]*\%'.c_col.'c.\{-}$\)\|\(\%'.c_col.'c<.\{-}$\)')
+         if matched == ""
+           return ""
+         endif
+       endif
 
-																																																					    " XML Tag definition is
-																																																						    "   (Letter | '_' | ':') (Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender)*
-																																																							    " Instead of dealing with CombiningChar and Extender, and because Vim's
-																																																								    " [:alpha:] only includes 8-bit characters, let's include all non-ASCII
-																																																									    " characters.
-																																																										    let tagname = matchstr(matched, '<\zs/\?\%([[:alpha:]_:]\|[^\x00-\x7F]\)\%([-._:[:alnum:]]\|[^\x00-\x7F]\)*')
-																																																											    return tagname
-																																																												endfu
+       " XML Tag definition is
+       "   (Letter | '_' | ':') (Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender)*
+       " Instead of dealing with CombiningChar and Extender, and because Vim's
+       " [:alpha:] only includes 8-bit characters, let's include all non-ASCII
+       " characters.
+       let tagname = matchstr(matched, '<\zs/\?\%([[:alpha:]_:]\|[^\x00-\x7F]\)\%([-._:[:alnum:]]\|[^\x00-\x7F]\)*')
+       return tagname
+     endfu
 
-																																																												fu! s:SearchForMatchingTag(tagname, forwards)
-																																																												    "returns the position of a matching tag or [0 0]
+     fu! s:SearchForMatchingTag(tagname, forwards)
+       "returns the position of a matching tag or [0 0]
 
-																																																													    let starttag = '\V<'.escape(a:tagname, '\').'\%(\_s\%(\.\{-}\|\_.\{-}\%<'.line('.').'l\)/\@<!\)\?>'
-																																																														    let midtag = ''
-																																																															    let endtag = '\V</'.escape(a:tagname, '\').'\_s\*'.(a:forwards?'':'\zs').'>'
-																																																																    let flags = 'nW'.(a:forwards?'':'b')
+       let starttag = '\V<'.escape(a:tagname, '\').'\%(\_s\%(\.\{-}\|\_.\{-}\%<'.line('.').'l\)/\@<!\)\?>'
+       let midtag = ''
+       let endtag = '\V</'.escape(a:tagname, '\').'\_s\*'.(a:forwards?'':'\zs').'>'
+       let flags = 'nW'.(a:forwards?'':'b')
 
-																																																																	    " When not in a string or comment ignore matches inside them.
-																																																																		    let skip ='synIDattr(synID(line("."), col("."), 0), "name") ' .
-																																																																			                \ '=~?  "\\%(html\\|xml\\)String\\|\\%(html\\|xml\\)CommentPart"'
-																																																																							    execute 'if' skip '| let skip = 0 | endif'
+       " When not in a string or comment ignore matches inside them.
+       let skip ='synIDattr(synID(line("."), col("."), 0), "name") ' .
+             \ '=~?  "\\%(html\\|xml\\)String\\|\\%(html\\|xml\\)CommentPart"'
+       execute 'if' skip '| let skip = 0 | endif'
 
-																																																																								    " Limit the search to lines visible in the window.
-																																																																									    let stopline = a:forwards ? line('w$') : line('w0')
-																																																																										    let timeout = 300
+       " Limit the search to lines visible in the window.
+       let stopline = a:forwards ? line('w$') : line('w0')
+       let timeout = 300
 
-																																																																											    " The searchpairpos() timeout parameter was added in 7.2
-																																																																												    if v:version >= 702
-																																																																														        return searchpairpos(starttag, midtag, endtag, flags, skip, stopline, timeout)
-																																																																																    else
-																																																																																		        return searchpairpos(starttag, midtag, endtag, flags, skip, stopline)
-																																																																																				    endif
-																																																																																					endfu
+       " The searchpairpos() timeout parameter was added in 7.2
+       if v:version >= 702
+         return searchpairpos(starttag, midtag, endtag, flags, skip, stopline, timeout)
+       else
+         return searchpairpos(starttag, midtag, endtag, flags, skip, stopline)
+       endif
+     endfu
 
-																																																																																					fu! s:HighlightTagAtPosition(position)
-																																																																																					    if a:position == [0, 0]
-																																																																																							        return
-																																																																																									    endif
-
-																																																																																										    let [m_lnum, m_col] = a:position
-																																																																																											    exe '2match MatchParen /\(\%' . m_lnum . 'l\%' . m_col .  'c<\zs.\{-}\ze[\n >]\)\|'
-																																																																																												                \ .'\(\%' . line('.') . 'l\%' . col('.') .  'c<\zs.\{-}\ze[\n >]\)\|'
-																																																																																																                \ .'\(\%' . line('.') . 'l<\zs[^<> ]*\%' . col('.') . 'c.\{-}\ze[\n >]\)\|'
-																																																																																																				                \ .'\(\%' . line('.') . 'l<\zs[^<>]\{-}\ze\s[^<>]*\%' . col('.') . 'c.\{-}[\n>]\)/'
-																																																																																																								    let w:tag_hl_on = 1
-																																																																																																									endfu
-
+     fu! s:HighlightTagAtPosition(position)
+       if a:position == [0, 0]
+         return
+       endif
+       let [m_lnum, m_col] = a:position
+       exe '2match MatchParen /\(\%' . m_lnum . 'l\%' . m_col .  'c<\zs.\{-}\ze[\n >]\)\|'
+             \ .'\(\%' . line('.') . 'l\%' . col('.') .  'c<\zs.\{-}\ze[\n >]\)\|'
+             \ .'\(\%' . line('.') . 'l<\zs[^<> ]*\%' . col('.') . 'c.\{-}\ze[\n >]\)\|'
+             \ .'\(\%' . line('.') . 'l<\zs[^<>]\{-}\ze\s[^<>]*\%' . col('.') . 'c.\{-}[\n>]\)/'
+       let w:tag_hl_on = 1
+     endfu
 
 
+"===================================
+" è¨­å®š
+" ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®æ©Ÿèƒ½æ‹¡å¼µ
+" ==================================
+"ã‚³ãƒãƒ³ãƒ‰è£œå®Œ
+set wildmenu " ã‚³ãƒãƒ³ãƒ‰ãƒ¢ãƒ¼ãƒ‰ã®è£œå®Œ
+set history=5000 " ä¿å­˜ã™ã‚‹ã‚³ãƒãƒ³ãƒ‰å±¥æ­´ã®æ•°
 
-"vim‚Ì”wŒi‚ğ“§‰ß
-if !has('gui_running')
-    augroup seiya
+" ã‚«ãƒ¼ã‚½ãƒ«ãƒ©ã‚¤ãƒ³ã‚’è¡¨ç¤ºã™ã‚‹
+set cursorline
+
+" ã©ã®ãƒ¢ãƒ¼ãƒ‰ã§ã‚‚ãƒã‚¦ã‚¹ã‚’ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
+set mouse=a
+
+"è¡Œç•ªå·ã®è¡¨ç¤º
+set number
+
+set smartindent
+
+" æœªä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ã®çµ‚äº†æ™‚ã«ä¿å­˜ç¢ºèª
+set confirm
+
+"ã‚³ãƒ¼ãƒ‰ã®ã‚·ãƒ³ã‚¿ãƒƒã‚¯ã‚¹ã®æœ‰åŠ¹åŒ–
+syntax on
+
+set showmatch
+
+"ã‚¿ãƒ–ã‚’åŠè§’ã‚¹ãƒšãƒ¼ã‚¹ä½•å€‹åˆ†ã‹
+set tabstop=2
+
+"ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã—ãªã„
+set noswapfile
+
+" ã‚¿ãƒ–ãƒãƒ¼ã‚’å¸¸ã«è¡¨ç¤ºã™ã‚‹???
+set showtabline=2
+
+"ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã—ãªã„( ~ â†ãƒãƒ«ãƒ€ãƒãƒ¼ã‚¯ã®ãƒ•ã‚¡ã‚¤ãƒ« )
+set nobackup
+set nowritebackup
+set noundofile
+
+" ã‚¹ãƒšãƒ¼ã‚¹ã‚’ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã¨åˆ¤æ–­ã™ã‚‹
+set shiftwidth=2
+
+" ã‚¿ãƒ–ã‚’ã‚¹ãƒšãƒ¼ã‚¹ã«å¤‰æ›´
+set expandtab
+
+"ãƒ¤ãƒ³ã‚¯ã§ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã«ä¿å­˜
+set clipboard=unnamed
+
+" æ¤œç´¢ã«ãƒ’ãƒƒãƒˆã—ãŸæ–‡å­—ã‚’ãƒã‚¤ãƒ©ã‚¤ãƒˆåŒ–
+set hlsearch
+
+" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å¹…
+set cmdwinheight=20
+
+" ã‚·ãƒ³ã‚¿ãƒƒã‚¯ã‚¹ã®è‰²å¤‰æ›´
+colorscheme hybrid
+
+" èƒŒæ™¯è‰²ã‚’é»’ã«ã™ã‚‹
+set background=dark
+
+" ã‚¿ãƒ–ã‚„æ”¹è¡Œã‚’è¡¨ç¤º (list:è¡¨ç¤º)
+set list
+
+" ã©ã®æ–‡å­—ã§ã‚¿ãƒ–ã‚„æ”¹è¡Œã‚’è¡¨ç¤ºã™ã‚‹ã‹ã‚’è¨­å®š
+set listchars=tab:>-,extends:<,trail:- "eol:<
+
+" ã€Œ%ã€ã‚­ãƒ¼ã§å¯¾å¿œã™ã‚‹HTMLã‚¿ã‚°ã‚„rubyã®def endã«ã‚¸ãƒ£ãƒ³ãƒ—ã§ãã‚‹ã€‚
+source $VIMRUNTIME/macros/matchit.vim
+
+" ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®å¹…ï¼ˆç¾åœ¨ã¯gvimrcã§è¨­å®šã—ã¦ã„ã‚‹ï¼‰
+"set columns=100
+" ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®é«˜ã•
+"set lines=50
+
+" ãƒ–ãƒ©ãƒ³ãƒæƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹(Git)
+let g:airline#extensions#branch#enabled = 1
+
+" rsenseã®è¨­å®š(ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãŒã¾ã )
+"let g:rsenseuseomnifunc = 1
+"
+" å“è³ªãƒã‚§ãƒƒã‚¯(è¨­å®šã—ãªãã¦ã‚‚ä½¿ãˆã‚‹!?)
+"let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['ruby'] }
+"let g:syntastic_ruby_checkers = ['rubocop']
+"==========================
+" ã‚­ãƒ¼ãƒãƒƒãƒ”ãƒ³ã‚°è¨­å®š
+" ãƒ¢ãƒ¼ãƒ‰(å†å‰²ã‚Šå½“ã¦ãªã—ï¼šå†å‰²ã‚Šå½“ã¦ã‚ã‚Š)
+"==========================
+"ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰ï¼‹ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ãƒ¢ãƒ¼ãƒ‰(noremapï¼šmap)
+"ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ãƒ¢ãƒ¼ãƒ‰ï¼‹ã‚¤ãƒ³ã‚µãƒ¼ãƒˆãƒ¢ãƒ¼ãƒ‰(noremap!ï¼šap!)
+"ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰(noremapï¼šnmap)
+"ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«(é¸æŠ)ãƒ¢ãƒ¼ãƒ‰(vnoremapï¼švmap)
+"ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ãƒ¢ãƒ¼ãƒ‰(cnoremapï¼šcmap)
+"ã‚¤ãƒ³ã‚µãƒ¼ãƒˆ(æŒ¿å…¥)ãƒ¢ãƒ¼ãƒ‰(inoremapï¼šimap)
+" =========================
+"è‡ªå‹•é–‰ã˜æ‹¬å¼§
+inoremap {<Enter> {}<Left><CR><ESC><S-o>
+inoremap [<Enter> []<Left><CR><ESC><S-o>
+inoremap (<Enter> ()<Left><CR><ESC><S-o>
+
+" Escã‚­ãƒ¼2å›ã§æ¤œç´¢èªå¥ã®ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’off
+nmap <Esc><Esc> :nohlsearch<CR><Esc>
+
+" ESCã‚­ãƒ¼ã§ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰â†’controll+jã‚­ãƒ¼ã§ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰
+" imap <C-j> <ESC>
+"jjã§ã‚¤ãƒ³ã‚µãƒ¼ãƒˆãƒ¢ãƒ¼ãƒ‰ã‚’æŠœã‘ã‚‹
+inoremap <silent> jj <ESC>
+
+" å…ˆé ­è¡Œã«ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç§»å‹•
+noremap <S-h> ^
+
+" è¡Œæœ«ã«ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç§»å‹•
+noremap <S-l> $
+
+" ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰ï¼šã‚·ãƒ³ã‚°ãƒ«ã‚¯ã‚©ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å†…ã®æ–‡å­—åˆ—ã‚’qã§ã‚«ãƒƒãƒˆ
+nmap q ci'
+
+" ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰ï¼šãƒ€ãƒ–ãƒ«ã‚¯ã‚©ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å†…ã®æ–‡å­—åˆ—ã‚’qqã§ã‚«ãƒƒãƒˆ
+nmap qq ci"
+
+" ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰ï¼švimgrepã§æ¤œç´¢ã—ãŸéš›ã®å‰ã¸
+noremap [ :cprevious<CR>
+
+" ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰ï¼švimgrepã§æ¤œç´¢ã—ãŸéš›ã®æ¬¡ã¸
+noremap ] :cnext<CR>
+
+"=========================
+" å…¨è§’ã‚¹ãƒšãƒ¼ã‚¹ãƒã‚¤ãƒ©ã‚¤ãƒˆåŒ–
+"=========================
+function! ZenkakuSpace()
+    highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
+endfunction
+
+if has('syntax')
+    augroup ZenkakuSpace
         autocmd!
-        autocmd VimEnter,ColorScheme * highlight Normal ctermbg=none
-        autocmd VimEnter,ColorScheme * highlight LineNr ctermbg=none
-        autocmd VimEnter,ColorScheme * highlight SignColumn ctermbg=none
-        autocmd VimEnter,ColorScheme * highlight VertSplit ctermbg=none
-        autocmd VimEnter,ColorScheme * highlight NonText ctermbg=none
+        autocmd ColorScheme       * call ZenkakuSpace()
+        autocmd VimEnter,WinEnter * match ZenkakuSpace /ã€€/
     augroup END
+    call ZenkakuSpace()
 endif
 
-let g:seiya_auto_enable=1
+" ==============================
+" ãƒ—ãƒ©ã‚°ã‚¤ãƒ³ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å¾Œè¨­å®š
+" ==============================
+" vimèµ·å‹•æ™‚ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ã‚’è¡¨ç¤º
+autocmd vimenter * NERDTree
+
+" NERDTreeã®è¡¨ç¤ºé ˜åŸŸã‚’è¨­å®š
+let NERDTreeWinSize= 20
+
+" ãƒ•ã‚¡ã‚¤ãƒ«ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã‘ã‚Œã°NERD treeã‚’æœ‰åŠ¹ã«ã™ã‚‹(ã‚¿ãƒ–é–“ã§åˆ¥ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã„
+" ã¦ã‚‚è‡ªå‹•ã§NERD treeã‚’è¡¨ç¤ºã™ã‚‹
+if argc() == 0
+  let g:nerdtree_tabs_open_on_console_startup = 1
+end
+" NERDTreeã®ç”»é¢ã‚’é–‹é–‰ã™ã‚‹
+map <C-n> :NERDTreeToggle<CR>
+" =======================
+" tyru.caw.vim
+" ======================
+" ã‚³ãƒ¡ãƒ³ãƒˆã®è¿½åŠ ãƒ»å‰Šé™¤ã‚’è¡Œãªã†
+"nmap <Leader>/ <Plug>(caw:zeropos:toggle)
+"vmap <Leader>/ <Plug>(caw:zeropos:toggle)
+
+" ===========================
+" Yggdroot/indentLine
+" ã¨ã‚Šã‚ãˆãšã‚«ãƒ¼ã‚½ãƒ«ã®ä½ç½®ãŒãšã‚Œã‚‹ç‚ºã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ
+" ===========================
+" ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã‚’ãƒã‚¤ãƒ©ã‚¤ãƒˆåŒ–ã—ãŸã„å ´åˆã¯ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã‚’å¤–ã™
+"let g:indentLine_setColors = 0
+
+" ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆæ–‡å­—ã‚’å¤‰æ›´
+"let g:indentLine_char = 'â”†'
+
+" jsonãƒ•ã‚¡ã‚¤ãƒ«ç³»ã®å•é¡Œï¼Ÿ
+"let g:indentLine_concealcursor = 'inc'
+"let g:indentLine_conceallevel = 2
+
+"########################2018/02/11
+"Note: This option must be set in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.  è‡ªå‹•è£œå®Œæ©Ÿèƒ½ã‚’æœ‰åŠ¹ã«ã™ã‚‹
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 
-"colorscheme
 
-colorscheme default
+" Use neocomplete.vim
+let g:neocomplete#sources#omni#input_patterns = {
+\   "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+\}
+" Set async completion.
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
+" Orulet g:monster#completion#solargraph#backend = "async_solargraph_suggest"
 
+" osyo-manga/vim-monster ä½¿ç”¨æ–¹æ³•ï¼šã„ã¾ã„ã¡ã‚ã‹ã‚‰ã‚“
+" With deoplete.nvim
+let g:deoplete#sources#omni#input_patterns = {
+\   "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+\}
+
+
+
+
+
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
